@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="contenedor">
+      <h1>Blog</h1>
+      <p>Viajes, tecnología y cocina</p>
+    </div>
+  </header>
+
+  <!-- Menú: data-visible indica para quién se ve cada enlace (invitado, usuario o admin) -->
+  <nav class="menu">
+    <div class="contenedor">
+      <a href="#/">Inicio</a>
+      <a href="#/admin" data-visible="admin">Administrar</a>
+      <span class="menu-derecha">
+        <span data-visible="usuario">Hola, <span id="nombre-usuario"></span></span>
+        <a href="#/salir" data-visible="usuario">Salir</a>
+        <a href="#/login" data-visible="invitado">Entrar</a>
+        <a href="#/registro" data-visible="invitado">Registrarse</a>
+      </span>
+    </div>
+  </nav>
+
+  <div class="contenedor principal">
+    <aside class="lateral">
+      <h2>Categorías</h2>
+      <div id="lista-categorias" class="lista-enlaces">
+        <a href="#/">Todas</a>
+      </div>
+    </aside>
+    <main>
+      <div id="mensaje-error" class="alerta" hidden></div>
+      <div id="contenido"></div>
+    </main>
+  </div>
+
+  <footer class="pie">
+    Blog - Práctica UNIR
+  </footer>
+
+  <!--
+    Plantillas: app.js copia la que necesita en la página y rellena cada
+    elemento con data-campo="x" con el dato x (título, autor...).
+  -->
+  <!-- Enlace del lateral de categorías -->
+  <template id="plantilla-categoria">
+    <a data-campo="nombre"></a>
+  </template>
+
+  <!-- Resumen de una entrada en el listado -->
+  <template id="plantilla-resumen">
+    <article class="tarjeta">
+      <img data-campo="imagen" alt="">
+      <div class="tarjeta-cuerpo">
+        <h2><a data-campo="titulo"></a></h2>
+        <p class="detalles"><span data-campo="fecha"></span> | <span data-campo="categoria"></span></p>
+        <p class="texto-largo" data-campo="texto"></p>
+      </div>
+    </article>
+  </template>
+
+  <template id="plantilla-sin-entradas">
+    <p>No hay entradas.</p>
+  </template>
+
+  <!-- Entrada completa con sus comentarios -->
+  <template id="plantilla-entrada">
+    <article>
+      <h2 data-campo="titulo"></h2>
+      <p class="detalles"><span data-campo="fecha"></span> | <span data-campo="categoria"></span></p>
+      <img class="imagen-entrada" data-campo="imagen" alt="">
+      <p class="texto-largo" data-campo="texto"></p>
+    </article>
+    <a class="boton boton-secundario" id="boton-editar">Editar entrada</a>
+    <h3>Comentarios</h3>
+    <div id="lista-comentarios"></div>
+  </template>
+
+  <template id="plantilla-comentario">
+    <div class="comentario">
+      <strong data-campo="autor"></strong> <span class="detalles" data-campo="fecha"></span>
+      <p class="texto-largo" data-campo="texto"></p>
+    </div>
+  </template>
+
+  <template id="plantilla-sin-comentarios">
+    <p>Todavía no hay comentarios.</p>
+  </template>
+
+  <template id="plantilla-comentar">
+    <form>
+      <textarea name="texto" rows="3" required></textarea>
+      <button class="boton">Comentar</button>
+    </form>
+  </template>
+
+  <template id="plantilla-aviso-comentar">
+    <p><a href="#/login">Entra</a> o <a href="#/registro">regístrate</a> para comentar.</p>
+  </template>
+
+  <!-- Formularios de acceso -->
+  <template id="plantilla-login">
+    <h2>Entrar</h2>
+    <form>
+      <label>Email <input name="email" type="email" required></label>
+      <label>Contraseña <input name="contrasena" type="password" required></label>
+      <button class="boton">Entrar</button>
+    </form>
+  </template>
+
+  <template id="plantilla-registro">
+    <h2>Registrarse</h2>
+    <form>
+      <label>Nombre <input name="nombre" required></label>
+      <label>Email <input name="email" type="email" required></label>
+      <label>Contraseña <input name="contrasena" type="password" required></label>
+      <button class="boton">Registrarse</button>
+    </form>
+  </template>
+
+  <!-- Panel de administración -->
+  <template id="plantilla-admin">
+    <h2>Entradas</h2>
+    <a class="boton" href="#/editar">Nueva entrada</a>
+    <ul id="admin-entradas" class="lista-admin"></ul>
+
+    <h2>Categorías</h2>
+    <form class="en-linea">
+      <input name="nombre" placeholder="Nueva categoría" required>
+      <button class="boton">Añadir</button>
+    </form>
+    <ul id="admin-categorias" class="lista-admin"></ul>
+  </template>
+
+  <template id="plantilla-fila-entrada">
+    <li class="en-linea">
+      <span class="ocupa-espacio" data-campo="titulo"></span>
+      <a class="boton boton-secundario">Editar</a>
+      <button class="boton boton-peligro" data-accion="borrarEntrada">Borrar</button>
+    </li>
+  </template>
+
+  <template id="plantilla-fila-categoria">
+    <li class="en-linea">
+      <input data-campo="nombre">
+      <button class="boton boton-secundario" data-accion="guardarCategoria">Guardar</button>
+      <button class="boton boton-peligro" data-accion="borrarCategoria">Borrar</button>
+    </li>
+  </template>
+
+  <!-- Crear o editar una entrada -->
+  <template id="plantilla-editor">
+    <h2 data-campo="encabezado"></h2>
+    <form>
+      <label>Título <input name="titulo" data-campo="titulo" required></label>
+      <label>Categoría <select name="categoria" required></select></label>
+      <label>Dirección (URL) de una imagen, opcional <input name="imagen" type="url" data-campo="imagen"></label>
+      <label>Contenido <textarea name="texto" data-campo="texto" rows="10" required></textarea></label>
+      <button class="boton">Guardar</button>
+      <a class="boton boton-secundario" href="#/admin">Cancelar</a>
+    </form>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>

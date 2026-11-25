@@ -1,0 +1,300 @@
+/* ---------- Colores y base ---------- */
+
+/* Paleta de colores. Se usan con var(--nombre) en el resto del fichero */
+:root {
+  --azul-oscuro: #1d3557;
+  --azul: #457b9d;
+  --rojo: #c0392b;
+  --gris: #6c757d;
+  --borde: #dee2e6;
+  --fondo: #f5f6f8;
+}
+
+/* El ancho de cada elemento incluye su relleno y su borde */
+* {
+  box-sizing: border-box;
+}
+
+/* Lo que tiene el atributo hidden no se ve nunca */
+[hidden] {
+  display: none !important;
+}
+
+/* La página es una columna: cabecera, menú, contenido y pie. min-height y
+   flex-direction hacen que el pie quede abajo aunque haya poco contenido */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: #212529;
+  background-color: var(--fondo);
+}
+
+a {
+  color: var(--azul);
+}
+
+/* Títulos con el mismo margen inferior */
+h1, h2, h3 {
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+
+/* Centra el contenido y limita su ancho en pantallas grandes */
+.contenedor {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ---------- Cabecera, menú y pie ---------- */
+
+/* Cabecera con degradado entre los dos azules */
+.cabecera {
+  padding: 1.5rem 0;
+  color: white;
+  background: linear-gradient(135deg, var(--azul-oscuro), var(--azul));
+}
+
+.cabecera h1,
+.cabecera p {
+  margin: 0;
+}
+
+.menu {
+  background-color: white;
+  border-bottom: 1px solid var(--borde);
+}
+
+/* Enlaces del menú en fila */
+.menu .contenedor {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.menu a {
+  color: #495057;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  color: var(--azul);
+}
+
+/* margin-left: auto empuja este grupo (usuario, entrar, salir) a la derecha */
+.menu-derecha {
+  display: flex;
+  gap: 1.25rem;
+  margin-left: auto;
+}
+
+.pie {
+  padding: 1rem;
+  text-align: center;
+  color: white;
+  background-color: var(--azul-oscuro);
+}
+
+/* ---------- Columnas: lateral y contenido ---------- */
+
+/* Dos columnas con CSS Grid: lateral de 220px y contenido con el resto.
+   flex-grow hace que esta zona ocupe el alto libre y el pie quede abajo */
+.principal {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2rem;
+  margin: 2rem auto;
+}
+
+.lateral h2 {
+  font-size: 1.2rem;
+}
+
+/* Lista de categorías del lateral */
+.lista-enlaces {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+}
+
+.lista-enlaces a {
+  padding: 0.6rem 1rem;
+  color: #495057;
+  text-decoration: none;
+}
+
+/* Línea separadora entre enlaces (todos menos el primero) */
+.lista-enlaces a + a {
+  border-top: 1px solid var(--borde);
+}
+
+.lista-enlaces a:hover {
+  background-color: var(--fondo);
+}
+
+/* ---------- Entradas y comentarios ---------- */
+
+/* Resumen de una entrada en el listado. overflow: hidden recorta la imagen
+   para que respete las esquinas redondeadas */
+.tarjeta {
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  background-color: white;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Todas las imágenes del listado con la misma altura; object-fit: cover
+   las recorta sin deformarlas */
+.tarjeta img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.tarjeta-cuerpo {
+  padding: 1rem 1.25rem;
+}
+
+.tarjeta h2 a {
+  text-decoration: none;
+}
+
+/* Texto secundario: fecha y categoría */
+.detalles {
+  font-size: 0.875rem;
+  color: var(--gris);
+}
+
+/* Imagen de la entrada completa: nunca más ancha que la columna */
+.imagen-entrada {
+  max-width: 100%;
+  border-radius: 6px;
+}
+
+/* Respeta los saltos de línea del texto de entradas y comentarios */
+.texto-largo {
+  white-space: pre-line;
+}
+
+/* Comentario con una línea azul a la izquierda */
+.comentario {
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--azul);
+}
+
+.comentario p {
+  margin: 0;
+}
+
+/* ---------- Formularios y botones ---------- */
+
+/* Los formularios se estilan por etiqueta, sin clases en el HTML.
+   Cada label ocupa una línea y contiene su campo */
+label {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Campos a todo el ancho; font: inherit usa la misma letra que la página */
+input,
+select,
+textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+}
+
+textarea {
+  margin-bottom: 0.5rem;
+}
+
+/* Botón principal. Sirve igual para <button> que para enlaces <a> */
+.boton {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: var(--azul);
+  border: none;
+  border-radius: 6px;
+}
+
+.boton:hover {
+  opacity: 0.85;
+}
+
+/* Variantes de color: se añaden a la clase boton */
+.boton-secundario {
+  background-color: var(--gris);
+}
+
+.boton-peligro {
+  background-color: var(--rojo);
+}
+
+/* Caja roja de los mensajes de error */
+.alerta {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  color: #842029;
+  background-color: #f8d7da;
+  border-radius: 6px;
+}
+
+/* ---------- Panel de administración ---------- */
+
+/* Elementos en una fila: formulario de categoría y filas del panel */
+.en-linea {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.en-linea input,
+.en-linea .boton {
+  margin: 0;
+}
+
+/* Ocupa el espacio libre de la fila y empuja los botones a la derecha */
+.ocupa-espacio {
+  flex-grow: 1;
+}
+
+/* Listas del panel de administración (entradas y categorías) */
+.lista-admin {
+  margin: 1rem 0 2rem;
+  padding: 0;
+  list-style: none;
+  background-color: white;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+}
+
+.lista-admin li {
+  padding: 0.6rem 1rem;
+}
+
+.lista-admin li + li {
+  border-top: 1px solid var(--borde);
+}
